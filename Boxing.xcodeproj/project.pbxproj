@@ -13,6 +13,9 @@
 		460AC92D200C2EF800B5EF58 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 460AC92C200C2EF800B5EF58 /* Assets.xcassets */; };
 		460AC930200C2EF800B5EF58 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 460AC92E200C2EF800B5EF58 /* LaunchScreen.storyboard */; };
 		460AC93B200C2EF800B5EF58 /* BoxingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460AC93A200C2EF800B5EF58 /* BoxingTests.swift */; };
+		460AC946200C326D00B5EF58 /* giphy-tumblr.gif in Resources */ = {isa = PBXBuildFile; fileRef = 460AC945200C326C00B5EF58 /* giphy-tumblr.gif */; };
+		460AC948200C335A00B5EF58 /* swift+gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460AC947200C335A00B5EF58 /* swift+gif.swift */; };
+		460AC94B200C38BB00B5EF58 /* MommaSayKnockYouOut.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 460AC94A200C38BB00B5EF58 /* MommaSayKnockYouOut.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +39,9 @@
 		460AC936200C2EF800B5EF58 /* BoxingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BoxingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		460AC93A200C2EF800B5EF58 /* BoxingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxingTests.swift; sourceTree = "<group>"; };
 		460AC93C200C2EF800B5EF58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		460AC945200C326C00B5EF58 /* giphy-tumblr.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "giphy-tumblr.gif"; sourceTree = "<group>"; };
+		460AC947200C335A00B5EF58 /* swift+gif.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "swift+gif.swift"; sourceTree = "<group>"; };
+		460AC94A200C38BB00B5EF58 /* MommaSayKnockYouOut.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = MommaSayKnockYouOut.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,12 +83,15 @@
 		460AC924200C2EF800B5EF58 /* Boxing */ = {
 			isa = PBXGroup;
 			children = (
+				460AC949200C38AA00B5EF58 /* Music */,
 				460AC925200C2EF800B5EF58 /* AppDelegate.swift */,
 				460AC927200C2EF800B5EF58 /* ViewController.swift */,
 				460AC929200C2EF800B5EF58 /* Main.storyboard */,
 				460AC92C200C2EF800B5EF58 /* Assets.xcassets */,
+				460AC945200C326C00B5EF58 /* giphy-tumblr.gif */,
 				460AC92E200C2EF800B5EF58 /* LaunchScreen.storyboard */,
 				460AC931200C2EF800B5EF58 /* Info.plist */,
+				460AC947200C335A00B5EF58 /* swift+gif.swift */,
 			);
 			path = Boxing;
 			sourceTree = "<group>";
@@ -94,6 +103,14 @@
 				460AC93C200C2EF800B5EF58 /* Info.plist */,
 			);
 			path = BoxingTests;
+			sourceTree = "<group>";
+		};
+		460AC949200C38AA00B5EF58 /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				460AC94A200C38BB00B5EF58 /* MommaSayKnockYouOut.mp3 */,
+			);
+			path = Music;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -179,6 +196,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				460AC946200C326D00B5EF58 /* giphy-tumblr.gif in Resources */,
+				460AC94B200C38BB00B5EF58 /* MommaSayKnockYouOut.mp3 in Resources */,
 				460AC930200C2EF800B5EF58 /* LaunchScreen.storyboard in Resources */,
 				460AC92D200C2EF800B5EF58 /* Assets.xcassets in Resources */,
 				460AC92B200C2EF800B5EF58 /* Main.storyboard in Resources */,
@@ -200,6 +219,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				460AC928200C2EF800B5EF58 /* ViewController.swift in Sources */,
+				460AC948200C335A00B5EF58 /* swift+gif.swift in Sources */,
 				460AC926200C2EF800B5EF58 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -354,6 +374,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FKK74628NB;
 				INFOPLIST_FILE = Boxing/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.codingdojo.Boxing;
@@ -368,6 +389,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FKK74628NB;
 				INFOPLIST_FILE = Boxing/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.codingdojo.Boxing;
