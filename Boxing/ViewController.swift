@@ -25,8 +25,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var gifView: UIImageView!
     var motionManager : CMMotionManager?
     var backGroundPlayer = AVAudioPlayer()
+    var backGroundPlayer1 = AVAudioPlayer()
     let opQueue = OperationQueue()
     var health = 100
+    
 
     
     @IBOutlet weak var ReadyToFightLabel: UILabel!
@@ -36,9 +38,18 @@ class ViewController: UIViewController {
     @IBAction func buttonPressed(_ sender: UIButton) {
         backGroundPlayer.play()
         ReadyToFightLabel.text = "FIGHT!"
-        buttonPressed.setTitle("Reset", for: .normal)
+        buttonPressed.isHidden = false
+        health = 100
+        if buttonPressed.isHidden == true{
+            buttonPressed.isHidden = false
+        }
+        else{
+            buttonPressed.isHidden = true
+            
+        }
         print("button pressed")
     }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,27 +102,86 @@ class ViewController: UIViewController {
                         
                         if xMotion > 1 {
                             self.health = self.health - 5
+                        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                             print("\(self.health)")
                             print("Jab!")
                         }
                         else if yMotion > 1 {
                             self.health = self.health - 10
+                        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                             print("\(self.health)")
                             print("Uppercut!")
                         }
                         else if zMotion > 1 {
                             self.health = self.health - 20
+                        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                             print("\(self.health)")
                             print("Hook!")
                         }
                     }
-                    if self.health == 0 {
+                    if self.health > 75 && self.health < 100 {
+                        DispatchQueue.main.async { // Correct
+                            self.ReadyToFightLabel.text = "Keep fighting- above 75%"
+                        }
+                        print ("Keep fighting- above 75%")
+                        self.gifView.loadGif(name: "giphy-1")
+                        
+                    }
+                    
+                    else if self.health > 50 && self.health < 74  {
+                        print ("Halfway there- at 50%")
+                        DispatchQueue.main.async { // Correct
+                            self.ReadyToFightLabel.text = "Halfway there- at 50%"
+                        }
+                        self.gifView.loadGif(name: "giphy-2")
+                    }
+
+                    else if self.health > 25 && self.health < 49 {
+                        print ("Almost there- at 25%")
+                        DispatchQueue.main.async { // Correct
+                            self.ReadyToFightLabel.text = "Almost there- at 25%"
+                        }
+                        self.gifView.loadGif(name: "giphy-3")
+                    }
+                    
+                    else if self.health > 1 && self.health < 24 {
+                        print ("Down goes Frasier-")
+                        DispatchQueue.main.async { // Correct
+                            self.ReadyToFightLabel.text = "Down goes Frasier-"
+                        }
+                        self.gifView.loadGif(name: "giphy-4")
+                    }
+                    
+                    if self.health <= 0 {
                         print("You win!!!!")
-                        manager.stopDeviceMotionUpdates()
-                        manager.stopAccelerometerUpdates()
+                        DispatchQueue.main.async { // Correct
+                            self.ReadyToFightLabel.text = "KNOCKOUT!"
+                            self.buttonPressed.isHidden = false
+                            self.buttonPressed.setTitle("Ready To Fight Again?", for: .normal)
+                        }
+                        self.gifView.loadGif(name: "giphy-5")
+//                        manager.stopDeviceMotionUpdates()
+//                        manager.stopAccelerometerUpdates()
                             self.backGroundPlayer.stop()
-                        
-                        
+
+                        do{
+                            self.backGroundPlayer1 = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "boxing_bell", ofType: "mp3")!))
+                            self.backGroundPlayer1.prepareToPlay()
+                            self.backGroundPlayer1.play()
+//                            self.backGroundPlayer1.numberOfLoops = 0
+//
+//
+//                            let audioSession = AVAudioSession.sharedInstance()
+//                            do{
+//                                try audioSession.setCategory(AVAudioSessionCategoryPlayback)
+//                            }
+//                            catch{
+//                                print("cant see you plpayer1")
+//                            }
+                        }
+                        catch {
+                            print(error)
+                        }
                     }
                     if let myerror = error {
                         // if we get an error, then we'll stop our device from trying to update.
@@ -119,6 +189,7 @@ class ViewController: UIViewController {
                         print("myerror", myerror)
                         manager.stopDeviceMotionUpdates()
                         manager.stopAccelerometerUpdates()
+                       
                     }
                 })
             }
@@ -129,40 +200,16 @@ class ViewController: UIViewController {
         else {
             print("We do not have a motion manager.")
         }
+    
     }
     
+    func updateUI(){
+        print("it went to the updateUI")
+    }
     
     func degrees(_ radians: Double) -> Double {
         return 180/Double.pi * radians
     }
-   
-//    override func viewDidAppear(_ animated: Bool)
-//    {
-//        motionManager?.accelerometerUpdateInterval = 1 //update every 0.2 sec
-//        motionManager?.startAccelerometerUpdates(to: OperationQueue.current!) { (data, error) in// tracking the motion, access current (not a function, getting two variable.  data or an error.
-//            if let myFightData = data  //checking to get data and set it to data
-//            {
-//                if myFightData.acceleration.x > 2  //x shaking back and forth
-//                {
-//                    //                    self.healthStatus -= 5
-//                    print("left and right noted")  ///x  shaking back and forth.  y z @ something
-//                }
-//                if myFightData.acceleration.y > 2
-//                {
-//                    print("up and down noted")
-//                    
-//                }
-//                if myFightData.acceleration.y > 2
-//                {
-//                    print("side noted")
-//                }
-//            }
-//        }
-//    override func didReceiveMemoryWarning() {
-//        super.didReceiveMemoryWarning()
-//        // Dispose of any resources that can be recreated.
-//    }
-//
-
+ 
 }
 
