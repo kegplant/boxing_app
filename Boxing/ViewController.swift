@@ -29,8 +29,11 @@ class ViewController: UIViewController {
     let opQueue = OperationQueue()
     var health = 100
     var isFighting=false
-    var axes:[Double]=[]
+    var a_xs:[Double]=[]
     var isPunching=false
+    var attitudeStart:[Double]=[]
+    var attitudeEnd:[Double]=[]
+    var attitudeRest:[Double]=[]
     
     @IBOutlet weak var ReadyToFightLabel: UILabel!
     
@@ -90,30 +93,52 @@ class ViewController: UIViewController {
                 motionManager?.accelerometerUpdateInterval = 0.01
                 
                 manager.startDeviceMotionUpdates(to: myQ, withHandler: { (data: CMDeviceMotion?, error: Error?) in
-//                    if let mydata = data {
-//                        let attitude = mydata.attitude
+                    if let mydata = data {
+                        let attitude = mydata.attitude
 //                        print (attitude)
-//                    }
-                    if let myAccelData = data
-                    {
-                        let xMotion = myAccelData.userAcceleration.x
-                        print ("forward", xMotion)
-                        
-                        if xMotion > 0.1 {
-                            
-                            
-                            
-                            
-                            
-                            
-                            self.health = self.health - 5
-                            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-                            print("\(self.health)")
-                            print("Jab!")
-                            self.dealDamage(damage: 26.0)
+                        if self.attitudeRest.count<3{
+                            self.attitudeRest=[attitude.pitch,attitude.roll,attitude.yaw]
                         }
-                        
+                        if let myAccelData = data
+                        {
+                            let xMotion = myAccelData.userAcceleration.x
+                            if xMotion < -0.6 && self.isPunching == true {
+                                self.isPunching=false
+                                var damage:Double=0
+                                for a_x in self.a_xs {
+                                    if a_x > 0 {
+                                        damage += a_x
+                                    }
+                                }
+                                self.attitudeEnd=[attitude.pitch,attitude.roll,attitude.yaw]
+                                let damageType = self.analyzePunch()
+                                self.dealDamage(damage: damage)
+                                print("Punch finished, damage \(damage), length \(self.a_xs.count)",damageType)
+                                self.a_xs=[]
+                                print("finished attitude:\(attitude)")
+//                                self.ReadyToFightLabel.text=damageType
+ AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+                            } else if xMotion > 0.1 && self.isPunching==false{
+                                
+                                self.attitudeStart=[attitude.pitch,attitude.roll,attitude.yaw]
+                                print("Punch started")
+                                print("start attitude:\(attitude.pitch)")
+
+                                self.isPunching=true
+                            }
+                            
+                            if self.a_xs.count>50 {
+                                self.a_xs=[]
+                                self.isPunching=false
+                                print("punch reset")
+                                self.attitudeRest=[attitude.pitch,attitude.roll,attitude.yaw]
+
+                            } else if self.isPunching == true {
+                                self.a_xs.append(xMotion)
+                            }
+                        }
                     }
+                    
                     if let myerror = error {
                         print("myerror", myerror)
                         manager.stopDeviceMotionUpdates()
@@ -129,8 +154,19 @@ class ViewController: UIViewController {
             print("We do not have a motion manager.")
         }
     }
+    func analyzePunch()->String{
+        var punchType="Jab"
+        print(abs(attitudeRest[0]-attitudeEnd[0]),abs(attitudeRest[1]-attitudeEnd[1]),abs(attitudeRest[2]-attitudeEnd[2]))
+        if degrees(abs(attitudeRest[2]-attitudeEnd[2]))>50 && degrees(abs(attitudeRest[2]-attitudeEnd[2])) < 130 {
+            punchType="Hook"
+        }else if degrees(abs(attitudeRest[1]-attitudeEnd[1]))>50 && degrees(abs(attitudeRest[1]-attitudeEnd[1])) < 130 {
+            punchType="Upper Cut"
+        }
+        return punchType
+    }
     func dealDamage(damage:Double){
         self.health -= Int(damage)
+        print("\(self.health)")
         self.checkHealth()
     }
     func checkHealth(){
@@ -179,26 +215,29 @@ class ViewController: UIViewController {
             //                        manager.stopAccelerometerUpdates()
             self.backGroundPlayer.stop()
             
-            do{
-                self.backGroundPlayer1 = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "boxing_bell", ofType: "mp3")!))
-                self.backGroundPlayer1.prepareToPlay()
-                self.backGroundPlayer1.play()
-                //                            self.backGroundPlayer1.numberOfLoops = 0
-                //                            let audioSession = AVAudioSession.sharedInstance()
-                //                            do{
-                //                                try audioSession.setCategory(AVAudioSessionCategoryPlayback)
-                //                            }
-                //                            catch{
-                //                                print("cant see you plpayer1")
-                //                            }
-            }
-            catch {
-                print(error)
-            }
+            //            do{
+            //                self.backGroundPlayer1 = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "boxing_bell", ofType: "mp3")!))
+            //                self.backGroundPlayer1.prepareToPlay()
+            //                self.backGroundPlayer1.play()
+            //                //                            self.backGroundPlayer1.numberOfLoops = 0
+            //                //                            let audioSession = AVAudioSession.sharedInstance()
+            //                //                            do{
+            //                //                                try audioSession.setCategory(AVAudioSessionCategoryPlayback)
+            //                //                            }
+            //                //                            catch{
+            //                //                                print("cant see you plpayer1")
+            //                //                            }
+            //            }
+            //            catch {
+            //                print(error)
+            //            }
         }
     }
     func updateUI(){
         print("it went to the updateUI")
+    }
+    func degrees(_ radians: Double) -> Double {
+        return 180/Double.pi * radians
     }
 }
 
