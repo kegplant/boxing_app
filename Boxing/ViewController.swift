@@ -62,6 +62,20 @@ class ViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        let fileManager = FileManager.default
+        if let tDocumentDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let filePath =  tDocumentDirectory.appendingPathComponent("\("test")")
+            if !fileManager.fileExists(atPath: filePath.path) {
+                do {
+                    try fileManager.createDirectory(atPath: filePath.path, withIntermediateDirectories: true, attributes: nil)
+                } catch {
+                   print("Couldn't create document directory")
+                }
+            }
+            print("Document directory is \(filePath)")
+        }
+        
+        
         
         gifView.loadGif(name: "giphy-tumblr")
         do{
@@ -112,6 +126,10 @@ class ViewController: UIViewController {
                                 }
                                 self.attitudeEnd=[attitude.pitch,attitude.roll,attitude.yaw]
                                 let damageType = self.analyzePunch()
+                                DispatchQueue.main.async { // Correct
+//                                    self.ReadyToFightLabel.text = "Keep fighting- above 75%"
+                                    self.buttonPressed.setTitle(damageType+"!!! -\(Int(damage))",for:.normal)
+                                }
                                 self.dealDamage(damage: damage)
                                 print("Punch finished, damage \(damage), length \(self.a_xs.count)",damageType)
                                 self.a_xs=[]
@@ -173,9 +191,10 @@ class ViewController: UIViewController {
         if self.health > 75 && self.health < 100 {
             DispatchQueue.main.async { // Correct
                 self.ReadyToFightLabel.text = "Keep fighting- above 75%"
+                self.gifView.loadGif(name: "giphy-1")
+
             }
             print ("Keep fighting- above 75%")
-            self.gifView.loadGif(name: "giphy-1")
             
         }
             
@@ -183,24 +202,27 @@ class ViewController: UIViewController {
             print ("Halfway there- at 50%")
             DispatchQueue.main.async { // Correct
                 self.ReadyToFightLabel.text = "Halfway there- at 50%"
+                self.gifView.loadGif(name: "giphy-2")
             }
-            self.gifView.loadGif(name: "giphy-2")
+//            self.gifView.loadGif(name: "giphy-2")
         }
             
         else if self.health > 25 && self.health < 49 {
             print ("Almost there- at 25%")
             DispatchQueue.main.async { // Correct
                 self.ReadyToFightLabel.text = "Almost there- at 25%"
+                self.gifView.loadGif(name: "giphy-3")
+
             }
-            self.gifView.loadGif(name: "giphy-3")
         }
             
         else if self.health > 1 && self.health < 24 {
             print ("Down goes Frasier-")
             DispatchQueue.main.async { // Correct
                 self.ReadyToFightLabel.text = "Down goes Frasier-"
+                self.gifView.loadGif(name: "giphy-4")
+
             }
-            self.gifView.loadGif(name: "giphy-4")
         }
         
         if self.health <= 0 {
@@ -209,28 +231,40 @@ class ViewController: UIViewController {
                 self.ReadyToFightLabel.text = "KNOCKOUT!"
                 self.buttonPressed.isHidden = false
                 self.buttonPressed.setTitle("Ready To Fight Again?", for: .normal)
+                self.gifView.loadGif(name: "giphy-5")
+                self.backGroundPlayer.stop()
+                                    self.isFighting=false
+                                    self.buttonPressed.setTitle("Push to Start",for:.normal)
+                                    if let manager = self.motionManager {
+                                        print ("stopping motion manager")
+                                        if manager.isDeviceMotionAvailable && manager.isAccelerometerAvailable {
+                                            print("stopping motion and accel")
+                                            manager.stopDeviceMotionUpdates()
+                                            manager.stopAccelerometerUpdates()
+                                        }
+                                    }
+//                do{
+//                    self.backGroundPlayer1 = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "boxing_bell", ofType: "mp3")!))
+//                    self.backGroundPlayer1.prepareToPlay()
+//                    self.backGroundPlayer1.play()
+//                    //                            self.backGroundPlayer1.numberOfLoops = 0
+//                    //                            let audioSession = AVAudioSession.sharedInstance()
+//                    //                            do{
+//                    //                                try audioSession.setCategory(AVAudioSessionCategoryPlayback)
+//                    //                            }
+//                    //                            catch{
+//                    //                                print("cant see you plpayer1")
+//                    //                            }
+
+//                }
+//                catch {
+//                    print(error)
+//                }
             }
-            self.gifView.loadGif(name: "giphy-5")
             //                        manager.stopDeviceMotionUpdates()
             //                        manager.stopAccelerometerUpdates()
-            self.backGroundPlayer.stop()
             
-            //            do{
-            //                self.backGroundPlayer1 = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "boxing_bell", ofType: "mp3")!))
-            //                self.backGroundPlayer1.prepareToPlay()
-            //                self.backGroundPlayer1.play()
-            //                //                            self.backGroundPlayer1.numberOfLoops = 0
-            //                //                            let audioSession = AVAudioSession.sharedInstance()
-            //                //                            do{
-            //                //                                try audioSession.setCategory(AVAudioSessionCategoryPlayback)
-            //                //                            }
-            //                //                            catch{
-            //                //                                print("cant see you plpayer1")
-            //                //                            }
-            //            }
-            //            catch {
-            //                print(error)
-            //            }
+            
         }
     }
     func updateUI(){
